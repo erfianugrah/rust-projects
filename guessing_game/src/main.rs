@@ -6,24 +6,36 @@ fn main() {
     println!("Guess the number!");
 
     let secret_number = rand::thread_rng().gen_range(1..=100);
+    loop {
+        // println!("The secret number is: {secret_number}");
+        //
+        // println!("Please input your guess.");
 
-    println!("The secret number is: {secret_number}");
+        let mut guess = String::new();
 
-    println!("Please input your guess.");
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
+        // We can do guess again because it's a Rust thing, it's called shadowing, instead of creating
+        // two variables, one string, one integer
+        // u32 = unsigned 32 bit integer, here we are telling guess to be that, trim the spaces beginning
+        // and end as well as /n before parsing the string in "guess" into a 32 bit integer
+        // let guess: u32 = guess.trim().parse().expect("Please type a number!");
 
-    let mut guess = String::new();
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
 
-    io::stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read line");
+        println!("You guessed: {guess}");
 
-    let guess: u32 = guess.trim().parse().expect("Please type a number!");
-
-    println!("You guessed: {guess}");
-
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("Too small!"),
-        Ordering::Greater => println!("Too big!"),
-        Ordering::Equal => println!("You win!"),
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+        }
     }
 }
