@@ -23,7 +23,7 @@ fn main() {
         // let guess: u32 = guess.trim().parse().expect("Please type a number!");
 
         let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
+            Ok(num) => num, // parse returns Result and Result is an enum that has Ok or Err
             Err(_) => continue,
         };
 
