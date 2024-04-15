@@ -22,7 +22,7 @@ fn main() {
     println!("{} and {}", g1, g2);
     // g1 and  g2 goes out of scope here
     let g3 = &mut z;
-    println!("{}", g3);
+    println!("{}", g3); // no longer used by g1 and g2, so g3 can work
 
     let ref_to_null = dangle();
     let ref_to_smth = correct_dangle();
