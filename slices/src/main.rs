@@ -60,7 +60,7 @@ fn third_word(s: &str) -> &str {
 }
 
 fn slice_main() {
-    let my_string = String::from("hello world");
+    let my_string = String::from("hello world"); // immutable my_string
 
     // `first_word` works on slices of `String`s, whether partial or whole
     let word = third_word(&my_string[0..6]);
