@@ -1,4 +1,5 @@
-[package]
+workspace = { members = ["restaurant"] }
+[package] # no mention of main.rs or lib.rs as it's implied to be the same name as the package
 name = "cargo-modules-crates-packages"
 version = "0.1.0"
 edition = "2021"
