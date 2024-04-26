@@ -1,4 +1,5 @@
-use std::collections::HashMap;
+use std::collections::HashMap; // SipHash providers some resistance to DoS attacks involving hash
+                               // tables, if too slow, you can use BuildHasher
 
 // let v: Vec<i32> = Vec::new(); // vector, store more than one value in a single data structure
 // // let v = vec![1, 2, 3];
@@ -15,21 +16,42 @@ use std::collections::HashMap;
 // // the method also works on a literal directly
 // let s = "initial contents".to_string();
 fn main() {
-    let mut scores = HashMap::new();
-
-    scores.insert(String::from("blue"), 10);
-    scores.insert(String::from("yellow"), 50);
-    scores.insert(String::from("yellow"), 40);
-    let team_name = String::from("Blue");
-    let score = scores.get(&team_name).copied().unwrap_or(0);
-    for (key, value) in &scores {
-        println!("{key}: {value}");
-    }
-    let field_name = String::from("Favorite color");
-    let field_value = String::from("Blue");
+    let text = "hello world wonderful world";
 
     let mut map = HashMap::new();
-    map.insert(field_name, field_value);
+
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0); // this inserts a &mut V to the value of the
+                                                  // specified key
+        *count += 1;
+    }
+
+    println!("{:?}", map);
+    // let mut scores = HashMap::new();
+    //
+    // scores.insert(String::from("blue"), 10);
+    // scores.insert(String::from("yellow"), 50);
+    // scores.insert(String::from("yellow"), 40);
+    // let team_name = String::from("Blue");
+    // let score = scores.get(&team_name).copied().unwrap_or(0);
+    // for (key, value) in &scores {
+    //     println!("{key}: {value}");
+    // }
+    // let field_name = String::from("Favorite color");
+    // let field_value = String::from("Blue");
+    //
+    // let mut map = HashMap::new();
+    // map.insert(field_name, field_value);
+
+    // let mut scores = HashMap::new();
+    // scores.insert(String::from("Blue"), 10); // or_insert method on Entry to return a mut reference
+    //                                          // to the value for the corresponding Entry only if isn't there
+    //
+    // scores.entry(String::from("Yellow")).or_insert(50);
+    // scores.entry(String::from("Blue")).or_insert(50);
+    //
+    // println!("{:?}", scores);
+
     // field_name and field_value are invalid at this point, try using them and
     // see what compiler error you get!
     // let mut s1 = String::from("foo");
