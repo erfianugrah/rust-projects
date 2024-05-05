@@ -36,6 +36,9 @@ impl Config {
     }
 }
 
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    vec![]
+}
 // fn parse_config(args: &[String]) -> Config {
 //     let query = &args[1].clone(); // Instead of lifetimes, clone() makes the code a bit more
 //                                   // simpler
@@ -43,3 +46,18 @@ impl Config {
 //
 //     Config { query, file_path }
 // }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.";
+        
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+}
