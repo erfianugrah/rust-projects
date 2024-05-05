@@ -11,7 +11,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
     // let contents =
     //     fs::read_to_string(config.file_path).expect("Should have been able to read the file"); // In main, the new statement fs::read_to_string takes the file_path, opens that file, and returns a std::io::Result<String> of the file’s contents.
-    println!("With text:\n{contents}");
+    // println!("With text:\n{contents}");
     //
     Ok(()) // need to wrap () from Result in Ok()
            // dbg!(args);
