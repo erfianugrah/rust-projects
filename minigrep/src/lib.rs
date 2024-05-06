@@ -8,7 +8,9 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
     let contents = fs::read_to_string(config.file_path)?; // ? will return the error from the
                                                           // current function for the caller to handle
-
+    for line in search(&config.query, &contents) {
+        println!("{line}");
+    }
     // let contents =
     //     fs::read_to_string(config.file_path).expect("Should have been able to read the file"); // In main, the new statement fs::read_to_string takes the file_path, opens that file, and returns a std::io::Result<String> of the file’s contents.
     // println!("With text:\n{contents}");
@@ -16,6 +18,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(()) // need to wrap () from Result in Ok()
            // dbg!(args);
 }
+
 pub struct Config {
     pub query: String,
     pub file_path: String,
@@ -36,9 +39,23 @@ impl Config {
     }
 }
 
-pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     vec![]
 }
+
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        // line is an iterator
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+    results
+    // vec![]
+}
+
 // fn parse_config(args: &[String]) -> Config {
 //     let query = &args[1].clone(); // Instead of lifetimes, clone() makes the code a bit more
 //                                   // simpler
@@ -46,6 +63,7 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
 //
 //     Config { query, file_path }
 // }
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -57,7 +75,30 @@ mod tests {
 Rust:
 safe, fast, productive.
 Pick three.";
-        
+
         assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+    #[test]
+    fn case_sensitive() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Duct tape.";
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, contents)
+        );
     }
 }
