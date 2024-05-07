@@ -1,3 +1,4 @@
+use std::env;
 use std::error::Error;
 use std::fs; // file system library
 
@@ -7,8 +8,14 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     // dynamic
 
     let contents = fs::read_to_string(config.file_path)?; // ? will return the error from the
-                                                          // current function for the caller to handle
-    for line in search(&config.query, &contents) {
+    let results = if config.ignore_case {
+        // current function for the caller to handle
+
+        search_case_insensitive(&config.query, &contents)
+    } else {
+        search(&config.query, &contents)
+    };
+    for line in results {
         println!("{line}");
     }
     // let contents =
@@ -22,6 +29,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 pub struct Config {
     pub query: String,
     pub file_path: String,
+    pub ignore_case: bool,
 }
 
 impl Config {
@@ -34,13 +42,29 @@ impl Config {
         }
         let query = args[1].clone();
         let file_path = args[2].clone();
+        let ignore_case = env::var("IGNORE_CASE").is_ok(); // checking whether env var is set
 
-        Ok(Config { query, file_path })
+        Ok(Config {
+            query,
+            file_path,
+            ignore_case,
+        })
     }
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    vec![]
+    let query = query.to_lowercase(); // so that it is case insensitive, but won't really work for
+                                      // unicode
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&query) {
+            // .to_lowercase() creates a new String not a
+            // string slice so & is needed since contains is defined to take a string slice
+            results.push(line);
+        }
+    }
+    results
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {

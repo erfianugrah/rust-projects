@@ -7,7 +7,7 @@ fn main() {
     let config = Config::build(&args).unwrap_or_else(|err| {
         // Result<T, E>, if result is an Ok
         // value, it'll be similar to unwrap(), if err, it calls the code in the closure
-        // println!("Problem parsing arguments: {err}");
+        eprintln!("Problem parsing arguments: {err}"); // stderr
         process::exit(1);
     });
     /* let config = parse_config(&args);  */// to turn it into a collection, such as a vector
@@ -18,7 +18,7 @@ fn main() {
     // println!("In file {}", config.file_path);
 
     if let Err(e) = minigrep::run(config) {
-        // println!("Application error: {e}");
+        eprintln!("Application error: {e}");
         process::exit(1);
     }
 }
