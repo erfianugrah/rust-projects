@@ -3,8 +3,8 @@ use std::env; // to able to use the args library, use args_os if unicode
 use std::process;
 
 fn main() {
-    let args: Vec<String> = env::args().collect(); // we call the collect() method on an iterator
-    let config = Config::build(&args).unwrap_or_else(|err| {
+    // let args: Vec<String> = env::args().collect(); // we call the collect() method on an iterator
+    let config = Config::build(env::args()).unwrap_or_else(|err| {
         // Result<T, E>, if result is an Ok
         // value, it'll be similar to unwrap(), if err, it calls the code in the closure
         eprintln!("Problem parsing arguments: {err}"); // stderr

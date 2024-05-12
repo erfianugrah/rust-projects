@@ -33,15 +33,28 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
+
+        // pub fn build(args: &[String]) -> Result<Config, &'static str> {
         // error values will always be
         // string literls and have the 'static lifetime
         // fn new(args: &[String]) -> Config {
-        if args.len() < 3 {
-            return Err("Not enough arguments");
-        }
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+        // if args.len() < 3 {
+        //     return Err("Not enough arguments");
+        // }
+        // let query = args[1].clone(); // can't take ownership of an iterator
+        // let file_path = args[2].clone();
         let ignore_case = env::var("IGNORE_CASE").is_ok(); // checking whether env var is set
 
         Ok(Config {
@@ -53,31 +66,40 @@ impl Config {
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let query = query.to_lowercase(); // so that it is case insensitive, but won't really work for
-                                      // unicode
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&query) {
-            // .to_lowercase() creates a new String not a
-            // string slice so & is needed since contains is defined to take a string slice
-            results.push(line);
-        }
-    }
-    results
+    let query = query.to_lowercase();
+    contents
+        .lines()
+        .filter(|line| line.contains(&query))
+        .collect()
+    // let query = query.to_lowercase(); // so that it is case insensitive, but won't really work for
+    //                                   // unicode
+    // let mut results = Vec::new();
+    //
+    // for line in contents.lines() {
+    //     if line.to_lowercase().contains(&query) {
+    //         // .to_lowercase() creates a new String not a
+    //         // string slice so & is needed since contains is defined to take a string slice
+    //         results.push(line);
+    //     }
+    // }
+    // results
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        // line is an iterator
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-    results
-    // vec![]
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
+    // let mut results = Vec::new();
+    //
+    // for line in contents.lines() {
+    //     // line is an iterator
+    //     if line.contains(query) {
+    //         results.push(line);
+    //     }
+    // }
+    // results
+    // // vec![]
 }
 
 // fn parse_config(args: &[String]) -> Config {
