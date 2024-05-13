@@ -1,4 +1,4 @@
-use minigrep::Config;
+use ergrep::Config;
 use std::env; // to able to use the args library, use args_os if unicode
 use std::process;
 
@@ -17,7 +17,7 @@ fn main() {
     // println!("Searching for {}", config.query);
     // println!("In file {}", config.file_path);
 
-    if let Err(e) = minigrep::run(config) {
+    if let Err(e) = ergrep::run(config) {
         eprintln!("Application error: {e}");
         process::exit(1);
     }
