@@ -1,12 +1,14 @@
+//! # minigrep
+//! `minigrep` is a tool to search strings within lines of text and printing out the line that
+//! contains the "grep-ed" string
 use std::env;
 use std::error::Error;
 use std::fs; // file system library
 
+/// Trait object Box<dyn Error>, function
+/// will return a type that implements the Error trait, but we don't have to specify, hence
+///dynamic
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    // Trait object Box<dyn Error>, function
-    // will return a type that implements the Error trait, but we don't have to specify, hence
-    // dynamic
-
     let contents = fs::read_to_string(config.file_path)?; // ? will return the error from the
     let results = if config.ignore_case {
         // current function for the caller to handle
