@@ -6,7 +6,7 @@ opt-level = 3
 
 [package]
 name = "ergrep"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 description = "A tool to grep strings within a line from a text file"

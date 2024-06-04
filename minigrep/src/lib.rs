@@ -12,7 +12,6 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?; // ? will return the error from the
     let results = if config.ignore_case {
         // current function for the caller to handle
-
         search_case_insensitive(&config.query, &contents)
     } else {
         search(&config.query, &contents)
@@ -71,7 +70,7 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
     let query = query.to_lowercase();
     contents
         .lines()
-        .filter(|line| line.to_lowercase().contains(&query))
+        .filter(|line| line.to_lowercase().contains(&query)) //
         .collect()
     // let query = query.to_lowercase(); // so that it is case insensitive, but won't really work for
     //                                   // unicode
